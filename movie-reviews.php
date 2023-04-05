@@ -13,6 +13,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 // required plugin class
 require_once dirname( __FILE__ ) . '/lib/class-tgm-plugin-activation.php';
+require_once dirname( __FILE__ ) . '/lib/widgets.class.php';
 
 /**
  * Using Singleton Pattern
@@ -41,6 +42,9 @@ class Movie_Reviews {
 
         // initialize custom taxonomy(ies) for movie reviews
         add_action( 'init', 'Movie_Reviews::register_taxonomies');
+
+        // register custom widgets
+        add_action( 'widgets_init',  array( $this, 'register_widgets' ));
 
         // initialize custom fields from Metabox.io:
         // first check for required plugin
@@ -95,6 +99,15 @@ class Movie_Reviews {
         ));
     }
 
+
+    /**
+     * Registers the custom widgets for this plugin
+     *
+     * @see JCMR_Widget_Recent_Reviews in widgets.class.php
+     */
+    function register_widgets(){
+        register_widget('JCMR_Widget_Recent_Reviews');
+    }
 
 
     /**
