@@ -7,7 +7,9 @@
  *
  * @see WP_Widget
  */
-class WP_Widget_Recent_Posts extends WP_Widget {
+class JCMR_Widget_Recent_Reviews extends WP_Widget {
+
+    const NUM_REVIEWS = 5;
 
     /**
      * Sets up a new Recent Posts widget instance.
@@ -21,7 +23,7 @@ class WP_Widget_Recent_Posts extends WP_Widget {
             'customize_selective_refresh' => true,
             'show_instance_in_rest'       => true,
         );
-        parent::__construct( 'recent-posts', __( 'Recent Posts' ), $widget_ops );
+        parent::__construct( 'recent-reviews', __( 'Recent Movie Reviews' ), $widget_ops );
         $this->alt_option_name = 'widget_recent_reviews';
     }
 
@@ -39,15 +41,15 @@ class WP_Widget_Recent_Posts extends WP_Widget {
             $args['widget_id'] = $this->id;
         }
 
-        $default_title = __( 'Recent Posts' );
+        $default_title = __( 'Recent Movie Reviews' );
         $title         = ( ! empty( $instance['title'] ) ) ? $instance['title'] : $default_title;
 
         /** This filter is documented in wp-includes/widgets/class-wp-widget-pages.php */
         $title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
-        $number = ( ! empty( $instance['number'] ) ) ? absint( $instance['number'] ) : 5;
+        $number = ( ! empty( $instance['number'] ) ) ? absint( $instance['number'] ) : self::NUM_REVIEWS;
         if ( ! $number ) {
-            $number = 5;
+            $number = self::NUM_REVIEWS;
         }
         $show_date = isset( $instance['show_date'] ) ? $instance['show_date'] : false;
 
@@ -64,12 +66,13 @@ class WP_Widget_Recent_Posts extends WP_Widget {
          * @param array $instance Array of settings for the current widget.
          */
             apply_filters(
-                'widget_posts_args',
+                'widget_recent_reviews_args',
                 array(
                     'posts_per_page'      => $number,
                     'no_found_rows'       => true,
                     'post_status'         => 'publish',
                     'ignore_sticky_posts' => true,
+                    'post_type'           => 'movie_review',
                 ),
                 $instance
             )
@@ -141,7 +144,7 @@ class WP_Widget_Recent_Posts extends WP_Widget {
     public function update( $new_instance, $old_instance ) {
         $instance              = $old_instance;
         $instance['title']     = sanitize_text_field( $new_instance['title'] );
-        $instance['number']    = (int) $new_instance['number'];
+        $instance['number']    = absint($new_instance['number']);
         $instance['show_date'] = isset( $new_instance['show_date'] ) ? (bool) $new_instance['show_date'] : false;
         return $instance;
     }
@@ -155,7 +158,7 @@ class WP_Widget_Recent_Posts extends WP_Widget {
      */
     public function form( $instance ) {
         $title     = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
-        $number    = isset( $instance['number'] ) ? absint( $instance['number'] ) : 5;
+        $number    = isset( $instance['number'] ) ? absint( $instance['number'] ) : self::NUM_REVIEWS;
         $show_date = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : false;
         ?>
         <p>

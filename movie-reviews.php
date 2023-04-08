@@ -43,9 +43,6 @@ class Movie_Reviews {
         // initialize custom taxonomy(ies) for movie reviews
         add_action( 'init', 'Movie_Reviews::register_taxonomies');
 
-        // register custom widgets
-        add_action( 'widgets_init',  array( $this, 'register_widgets' ));
-
         // initialize custom fields from Metabox.io:
         // first check for required plugin
         add_action( 'tgmpa_register', array( $this, 'check_required_plugins' ) );
@@ -55,6 +52,15 @@ class Movie_Reviews {
         // add custom template and stylesheet
         add_action('template_include', array($this, 'add_cpt_template'));
         add_action('wp_enqueue_scripts', array($this, 'add_styles_scripts'));
+
+        // register custom widgets
+        add_action( 'widgets_init',  array( $this, 'register_widgets' ));
+
+        // add menu items
+        add_action('admin_menu', array($this, 'admin_menu'));
+
+        // add custom settings
+        add_action('admin_init', array($this, 'create_settings'));
     }
 
 
@@ -107,6 +113,62 @@ class Movie_Reviews {
      */
     function register_widgets(){
         register_widget('JCMR_Widget_Recent_Reviews');
+    }
+
+
+    /**
+     * Creates administrative menu items
+     */
+    function admin_menu() {
+        add_submenu_page(
+            'edit.php?post_type=movie_review',
+            'Movie Review Options',
+            'Settings',
+            'manage_options',
+            'movie_reviews_opts',
+            array($this, 'options_page')
+        );
+    }
+
+    function create_settings() {
+        register_setting(
+            self::FIELD_PREFIX . 'movie_review',
+            self::FIELD_PREFIX . 'rating_options',
+            null
+        );
+
+        add_settings_section(
+            self::FIELD_PREFIX . 'movie_review_options',
+            '',
+            function() {
+                printf('<p>%s</p>',
+                    __('The description that goes with each numerical rating.')
+                );
+            },
+        'movie_reviews_opts'
+        );
+
+//        add_settings_field();
+    }
+
+
+    /**
+     * Callback for the actual options page
+     */
+    function options_page(){
+        $pageTitle = __('Movie Reviews Options');
+
+        print <<<start
+        <div class="wrapp">
+        <h1>$pageTitle</h1>
+        <form method="post" action="options.php">
+start;
+
+        settings_fields(self::FIELD_PREFIX . 'movie_review');
+        do_settings_sections('movie_review_opts');
+        submit_button();
+
+        print '</form></div>';
     }
 
 
