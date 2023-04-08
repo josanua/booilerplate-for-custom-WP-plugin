@@ -148,7 +148,20 @@ class Movie_Reviews {
         'movie_reviews_opts'
         );
 
-//        add_settings_field();
+        add_settings_field(
+            'rating_option_1',
+            'Rating 1:',
+            array($this, 'setting_rating_options'),
+            'movie_review_opts',
+            self::FIELD_PREFIX . 'movie_review_options'
+        );
+    }
+
+    function setting_rating_options(){
+        $opt_name = self::FIELD_PREFIX . 'rating_options';
+        $val = '';
+
+        print '<input class="widefat" name="'. $opt_name .'" type="text" value="'. esc_attr($val) .'" />';
     }
 
 
