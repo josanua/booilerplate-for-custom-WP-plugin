@@ -161,7 +161,7 @@ class Movie_Reviews {
         $opt_name = self::FIELD_PREFIX . 'rating_options';
         $val = '';
 
-        print '<input class="widefat" name="'. $opt_name .'" type="text" value="'. esc_attr($val) .'" />';
+        echo '<input class="widefat" name="'. $opt_name .'" type="text" value="'. esc_attr($val) .'" />';
     }
 
 
@@ -170,6 +170,7 @@ class Movie_Reviews {
      */
     function options_page(){
         $pageTitle = __('Movie Reviews Options');
+        settings_errors();
 
         print <<<start
         <div class="wrapp">

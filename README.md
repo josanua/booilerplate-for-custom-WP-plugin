@@ -40,6 +40,10 @@ The options_page function creates the HTML for the options page for the plugin.
 
 Finally, the activate function registers the "movie_review" post type and the "movie_types" taxonomy and flushes the rewrite rules to ensure the new post type and taxonomy are registered correctly.
 
+## Issues
+* At the moment custom input isn't displayed in 'Movie Reviews Options' 
+
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE). See the LICENSE file for details.
